@@ -23,3 +23,25 @@ fetch('data/your-data.geojson')
         }).addTo(mymap);
     })
     .catch(error => console.error('Error loading the GeoJSON file:', error));
+var geojsonLayer = L.geoJSON(all_data).addTo(mymap);
+var slider = document.getElementById('mySlider');
+var yearDisplay = document.getElementById('year-display');
+
+slider.addEventListener('input', function() {
+    var selectedYear = slider.value;
+    yearDisplay.textContent = selectedYear;
+
+    // Clear the existing layer
+    geojsonLayer.clearLayers();
+
+    // Filter the data based on the slider value
+    var filteredData = {
+        "type": "FeatureCollection",
+        "features": all_data.features.filter(function(feature) {
+            return feature.properties.year <= selectedYear;
+        })
+    };
+
+    // Add the filtered data to the map
+    geojsonLayer.addData(filteredData);
+});
